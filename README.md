@@ -1,54 +1,50 @@
-# React + TypeScript + Vite
+# Тестовое задание для АО РК-ТЕХНОЛОГИИ
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание проекта
 
-Currently, two official plugins are available:
+**Cat Image Fetcher** — это простое React-приложение, которое загружает случайные изображения котов с внешнего API и отображает их. Приложение предоставляет пользователю возможность включать/выключать автообновление изображений и управлять процессом загрузки через пользовательский интерфейс.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+### Как написан проект
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **React**:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+   - Приложение построено на React с использованием функциональных компонентов.
+   - Для управления состоянием используются хуки `useState`, `useEffect` и `useRef`.
+
+2. **TypeScript**:
+
+   - Код написан на TypeScript, что обеспечивает строгую типизацию и предотвращает ошибки на этапе разработки.
+
+3. **Стилизация**:
+   - В проекте используются три подхода к стилизации:
+     - **Styled-components**: Для компонента `DataFetcher`.
+     - **SCSS**: Для компонента `FetcherControls`.
+     - **CSS Modules**: Для компонента `CatImage`.
+
+---
+
+### Как построено REST API
+
+1. **API для получения изображений котов**:
+
+   - Приложение использует внешний API [The Cat API](https://thecatapi.com) для получения случайных изображений котов.
+   - Вызов API реализован в утилите `fetchCat.ts`, которая экспортирует асинхронную функцию `fetchCatImage`.
+
+2. **Функция `fetchCatImage`**:
+   - Делает HTTP-запрос к API.
+   - Возвращает URL изображения кота.
+   - Обрабатывает ошибки, если запрос не удался.
+
+Пример кода из `fetchCat.ts`:
+
+```typescript
+export async function fetchCatImage(): Promise<string> {
+  const response = await fetch("https://api.thecatapi.com/v1/images/search");
+  const data = await response.json();
+  return data[0].url;
+}
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+---
